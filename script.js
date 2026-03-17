@@ -102,11 +102,12 @@ function downloadTxtFile(bioData, questionnaireData) {
         }
     }
 
-    content += "\n----- LONG QUESTIONS -----\n";
-    for (let key in questionnaireData) {
-        if(!yesnoKeys[key]) { // only long questions
-            content += `${key}: ${questionnaireData[key]}\n`;
-        }
+   content += "\n----- LONG QUESTIONS -----\n";
+for (let key in questionnaireData) {
+    // anything not in yesnoKeys is long question
+    if(!yesnoKeys[key]) {
+        content += `${key}: ${questionnaireData[key]}\n`;
+    }
     }
 
     const blob = new Blob([content], {type:"text/plain"});
@@ -193,41 +194,54 @@ yesnoForm.addEventListener("submit", e => {
 const longQuestionSteps = document.querySelectorAll(".long-question-step");
 let currentStep = 0;
 
-// Show first step
-longQuestionSteps[currentStep].style.display = "flex";
+// Show first step initially
+function showCurrentStep() {
+    longQuestionSteps.forEach((step, index) => {
+        step.style.display = index === currentStep ? "flex" : "none";
+    });
+}
+showCurrentStep();
 
-// Next button logic
+// "Next" buttons for steps before the last one
 document.querySelectorAll(".next-long-question").forEach(btn => {
     btn.addEventListener("click", () => {
-        const textarea = longQuestionSteps[currentStep].querySelector("textarea");
-        if(!textarea.value.trim()) {
-            alert("Please answer the question before continuing.");
-            return;
+        const textareas = longQuestionSteps[currentStep].querySelectorAll("textarea");
+
+        // Ensure all textareas in current step are filled
+        for (let ta of textareas) {
+            if (!ta.value.trim()) {
+                alert("Please answer all questions before continuing.");
+                return;
+            }
         }
 
-        window.questionnaireData[textarea.name] = textarea.value.trim();
+        // Save all answers in current step
+        textareas.forEach(ta => {
+            window.questionnaireData[ta.name] = ta.value.trim();
+        });
 
-        longQuestionSteps[currentStep].style.display = "none";
+        // Move to next step
         currentStep++;
-        if(longQuestionSteps[currentStep]) {
-            longQuestionSteps[currentStep].style.display = "flex";
+        if (longQuestionSteps[currentStep]) {
+            showCurrentStep();
         }
     });
 });
 
-// final Submit button
+// Final Submit button (on last step)
 gfForm.addEventListener("submit", e => {
     e.preventDefault();
 
-    // store last step answer
-    const textarea = longQuestionSteps[currentStep].querySelector("textarea");
-    if(textarea.value.trim()) {
-        window.questionnaireData[textarea.name] = textarea.value.trim();
-    }
+    // Save all textareas in the current (last) step
+    const textareas = longQuestionSteps[currentStep].querySelectorAll("textarea");
+    textareas.forEach(ta => {
+        if(ta.value.trim()) window.questionnaireData[ta.name] = ta.value.trim();
+    });
 
-    // download txt file
+    // Download all data
     downloadTxtFile(window.bioData || {}, window.questionnaireData);
 
+    // Hide questionnaire and show plinko
     questionnaireScreen.style.display = "none";
     plinkoSection.style.display = "flex";
 
