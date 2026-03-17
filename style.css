@@ -7,7 +7,7 @@
 }
 
 body {
-    background: linear-gradient(135deg, #b3e0ff, #66b2ff);
+    background: linear-gradient(135deg, #bde5ff, #2b7fd3);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -31,6 +31,22 @@ body {
 .screen.hidden {
     opacity: 0;
     pointer-events: none;
+}
+
+/* Floating GIFs */
+.floating-gif {
+    position: absolute;
+    width: 20px;
+    height: auto;
+    pointer-events: none;
+    animation: floatGif linear infinite;
+    z-index: 0;
+}
+
+@keyframes floatGif {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-800px) rotate(360deg); opacity: 0; }
 }
 
 /* Form Container - Glassy */
