@@ -282,6 +282,21 @@ for(let row=0; row<rows; row++){
 Engine.run(engine);
 Render.run(render);
 
+Events.on(render, 'afterRender', () => {
+    const ctx = render.context;
+
+    ctx.font = "bold 20px Poppins"; // match form font
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff"; // white text for contrast
+
+    // YES on green box
+    ctx.fillText("YES", yesBox.position.x, yesBox.position.y);
+
+    // NO on red box
+    ctx.fillText("NO", noBox.position.x, noBox.position.y);
+});
+
 const checkboxes = [];
 function dropCheckbox(){
     const checkbox = Bodies.rectangle(noBox.position.x,50,20,20,{
