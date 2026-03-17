@@ -117,15 +117,22 @@ document.getElementById("continueGif").addEventListener("click", (e) => {
         document.body.appendChild(gif);
         activeGIFs.push(gif);
     }
+    nameWelcomeScreen.classList.add("hidden");
 
-    nameWelcomeScreen.style.display = "none";
-    questionnaireScreen.style.display = "flex";
-    questionnaireScreen.classList.add("fade-in");
     setTimeout(() => {
-        questionnaireScreen.classList.add("show");
-    }, 50);
 
-    startFloatingGIFs(); 
+        nameWelcomeScreen.style.display = "none";
+
+        questionnaireScreen.style.display = "flex";
+        questionnaireScreen.classList.add("fade-in");
+
+        setTimeout(() => {
+            questionnaireScreen.classList.add("show");
+        }, 50);
+
+        startFloatingGIFs();
+
+    }, 2000); 
 });
 
 gfForm.addEventListener("submit", e => {
