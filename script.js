@@ -1,4 +1,3 @@
-// Floating GIFs
 let activeGIFs = [];
 function startFloatingGIFs() {
     for (let i = 0; i < 15; i++) createFloatingGIF();
@@ -19,7 +18,6 @@ function createFloatingGIF() {
     activeGIFs.push(gif);
 }
 
-// Form references
 const welcomeScreen = document.getElementById("welcome-screen");
 const questionnaireScreen = document.getElementById("questionnaire-screen");
 const nameWelcomeScreen = document.getElementById("name-welcome-screen");
@@ -29,7 +27,6 @@ const gfForm = document.getElementById("gfForm");
 const canvas = document.getElementById("gameCanvas");
 canvas.style.display = "none";
 
-// Height unit handling
 const heightUnit = document.getElementById("heightUnit");
 const heightCmInput = document.querySelector("input[name='heightCm']");
 const ftinInputs = document.getElementById("ftin-inputs");
@@ -52,7 +49,6 @@ heightUnit.addEventListener("change", () => {
     }
 });
 
-// Auto-expand textareas
 ["distinguishingFeatures","hobbies","perfectDate"].forEach(name => {
     const el = document.querySelector(`textarea[name='${name}']`);
     if(el){
@@ -63,7 +59,6 @@ heightUnit.addEventListener("change", () => {
     }
 });
 
-// TXT download
 function downloadTxtFile(bioData, questionnaireData) {
     let content = "===== GF APPLICATION =====\n\n";
     content += "----- BIOGRAPHY -----\n";
@@ -81,7 +76,6 @@ function downloadTxtFile(bioData, questionnaireData) {
     link.click();
 }
 
-// Welcome form submission
 welcomeForm.addEventListener("submit", e => {
     e.preventDefault();
     const bioData = {};
@@ -90,7 +84,6 @@ welcomeForm.addEventListener("submit", e => {
     if(heightUnit.value === "cm") bioData.height = bioData.heightCm + " cm";
     else bioData.height = bioData.heightFt + " ft " + bioData.heightIn + " in";
 
-    // Gender radio
     bioData.gender = welcomeForm.querySelector("input[name='gender']:checked")?.value || "";
 
     delete bioData.heightCm;
@@ -100,20 +93,17 @@ welcomeForm.addEventListener("submit", e => {
 
     window.bioData = bioData;
 
-    // Show intermediate screen
     welcomeScreen.style.display = "none";
     const welcomeText = document.getElementById("welcomeNameText");
     welcomeText.textContent = `Welcome ${bioData.name} to the GF Application!`;
     nameWelcomeScreen.style.display = "flex";
 });
 
-// Click GIF to continue to questionnaire
 document.getElementById("continueGif").addEventListener("click", (e) => {
     const rect = e.target.getBoundingClientRect();
     const startX = rect.left + rect.width / 2;
     const startY = rect.top + rect.height / 2;
 
-    // Spawn small floating GIFs from GIF location
     for (let i = 0; i < 15; i++) {
         const gif = document.createElement("img");
         gif.src = "yes.gif";
@@ -128,7 +118,6 @@ document.getElementById("continueGif").addEventListener("click", (e) => {
         activeGIFs.push(gif);
     }
 
-    // Fade in questionnaire screen
     nameWelcomeScreen.style.display = "none";
     questionnaireScreen.style.display = "flex";
     questionnaireScreen.classList.add("fade-in");
@@ -136,18 +125,21 @@ document.getElementById("continueGif").addEventListener("click", (e) => {
         questionnaireScreen.classList.add("show");
     }, 50);
 
-    startFloatingGIFs(); // Start continuous floating GIFs after click
+    startFloatingGIFs(); 
 });
 
-// Questionnaire form submission
 gfForm.addEventListener("submit", e => {
     e.preventDefault();
+
     const questionnaireData = {};
     new FormData(gfForm).forEach((value,key)=>questionnaireData[key]=value);
 
     downloadTxtFile(window.bioData || {}, questionnaireData);
+
     questionnaireScreen.style.display = "none";
     plinkoSection.style.display = "flex";
+
+    stopFloatingGIFs(); // 🔴 stop cats when plinko appears
 });
 
 // ---------------- Plinko Logic ----------------
@@ -221,7 +213,10 @@ Events.on(engine,'afterUpdate',()=>{
     checkboxes.forEach((cb,i)=>{
         if(!cb.custom.scored && isOverlapping(cb, yesBox)){
             alert("Checkbox landed in YES!");
-            startFloatingGIFs();
+
+            stopFloatingGIFs();
+            startFloatingGIFs(); 
+
             cb.custom.scored=true;
             World.remove(engine.world, cb);
             checkboxes.splice(i,1);
@@ -229,12 +224,14 @@ Events.on(engine,'afterUpdate',()=>{
     });
 });
 
-// YES/NO button handling
 document.getElementById("yesBtn").addEventListener("click", ()=>{
     const answer = prompt("Are you sure you want to retract your statement?");
+    
     if(answer !== null){
         alert("Statement retracted.");
-        startFloatingGIFs();
+
+        stopFloatingGIFs();
+        startFloatingGIFs(); 
     }
 });
 
