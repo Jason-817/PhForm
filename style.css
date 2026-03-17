@@ -1,21 +1,13 @@
-/* Global Styles */
+/* ---------------- Global Styles ---------------- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    background:
-        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
-        url("post.jpg");
-
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
+    background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('post.jpg') center/cover no-repeat;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -24,7 +16,7 @@ body {
     position: relative;
 }
 
-/* Screens */
+/* ---------------- Screens ---------------- */
 .screen {
     width: 100%;
     min-height: 100vh;
@@ -33,7 +25,7 @@ body {
     align-items: center;
     position: relative;
     opacity: 1;
-    transition: opacity 2s ease-in-out; /* slower transition */
+    transition: opacity 1.5s ease; /* smoother transition */
 }
 
 .screen.hidden {
@@ -41,7 +33,7 @@ body {
     pointer-events: none;
 }
 
-/* Floating GIFs */
+/* ---------------- Floating GIFs ---------------- */
 .floating-gif {
     position: absolute;
     width: 20px;
@@ -57,7 +49,7 @@ body {
     100% { transform: translateY(-800px) rotate(360deg); opacity: 0; }
 }
 
-/* Form Container - Glassy */
+/* ---------------- Form Container - Glassy ---------------- */
 .form-container {
     background: rgba(255,255,255,0.2);
     backdrop-filter: blur(20px);
@@ -76,7 +68,7 @@ body {
     flex-direction: column;
 }
 
-/* Inputs and Textareas */
+/* ---------------- Inputs and Textareas ---------------- */
 input[type="text"],
 input[type="number"],
 textarea,
@@ -103,7 +95,6 @@ textarea {
     min-height: 60px;
 }
 
-/* Focus styles */
 input:focus,
 textarea:focus,
 select:focus {
@@ -113,11 +104,8 @@ select:focus {
     color: #000;
 }
 
-/* Labels and Buttons */
+/* ---------------- Labels and Buttons ---------------- */
 label {
-    display: inline-block;
-    margin-right: 10px;
-    margin-bottom: 5px;
     cursor: pointer;
     color: #000;
     font-weight: 500;
@@ -140,7 +128,7 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* Height row */
+/* ---------------- Height Row ---------------- */
 .height-row {
     display: flex;
     gap: 10px;
@@ -151,14 +139,14 @@ button:hover {
     display: none;
 }
 
-/* Gender row */
+/* ---------------- Gender Row ---------------- */
 .gender-row {
     display: flex;
     gap: 15px;
     justify-content: center;
 }
 
-/* Intermediate Welcome Screen GIF */
+/* ---------------- Intermediate Welcome Screen ---------------- */
 #name-welcome-screen .form-container {
     display: flex;
     flex-direction: column;
@@ -179,17 +167,17 @@ button:hover {
     filter: brightness(1.2);
 }
 
-/* Fade-in animation for questionnaire */
+/* ---------------- Fade-in animation ---------------- */
 .fade-in {
     opacity: 0;
-    transition: opacity 1.2s ease-in-out;
+    transition: opacity 1.5s ease-in-out;
 }
 
 .fade-in.show {
     opacity: 1;
 }
 
-/* Plinko Section */
+/* ---------------- Plinko Section ---------------- */
 #plinko-section {
     min-height: 100vh;
     display: flex;
@@ -219,16 +207,124 @@ button:hover {
     border-radius: 8px;
 }
 
-/* Canvas */
+/* ---------------- Canvas ---------------- */
 #gameCanvas {
     display: block;
     margin-top: 10px;
     border-radius: 10px;
 }
 
+/* ---------------- Yes/No Questions - Aesthetic ---------------- */
+#yesnoForm {
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* space between questions container and submit button */
+    width: 100%;
+}
+
+/* Questions container spacing */
+.questions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* space between question boxes */
+}
+
+/* Each question box */
+.question-row {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255,255,255,0.15);
+    padding: 15px 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Radio buttons styling */
+.radio-group {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 1em;
+    padding: 8px 16px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.25);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.radio-group label:hover {
+    background: rgba(255,255,255,0.4);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Center Next button */
+#yesnoForm button {
+    display: block;
+    margin: 20px auto 0 auto;
+    width: 150px;
+    text-align: center;
+}
+
+#yesnoForm p {
+    font-weight: 500;
+    font-size: 1.05em;
+    color: #111; /* subtle dark color */
+    margin-bottom: 8px;
+}
+
+/* ---------------- Long Question Styling ---------------- */
+#gfForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* spacing between question, textarea, and button */
+    width: 100%;
+}
+
+#gfForm p {
+    font-weight: 500;
+    font-size: 1.05em;
+    color: #111;
+}
+
+#gfForm textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.15);
+    min-height: 100px; /* give it a bit more space */
+    resize: none;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#gfForm textarea:focus {
+    border-color: rgba(0,0,0,0.6);
+    background: rgba(255,255,255,0.25);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+#gfForm button {
+    width: 150px;
+    margin: 20px auto 0 auto; /* center like before */
+}
+
 /* Responsive */
 @media(max-width: 500px) {
-    .form-container { width: 95%; padding: 20px; }
-    h1 { font-size: 1.5em; }
-    textarea, input[type="text"], input[type="number"] { font-size: 0.9em; }
+    .questions-container {
+        gap: 15px;
+    }
+    .radio-group {
+        gap: 20px;
+    }
 }

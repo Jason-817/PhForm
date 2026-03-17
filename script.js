@@ -1,11 +1,15 @@
+// ---------------- Floating GIFs ----------------
 let activeGIFs = [];
+
 function startFloatingGIFs() {
     for (let i = 0; i < 15; i++) createFloatingGIF();
 }
+
 function stopFloatingGIFs() {
     activeGIFs.forEach(g => g.remove());
     activeGIFs = [];
 }
+
 function createFloatingGIF() {
     const gif = document.createElement("img");
     gif.src = "yes.gif";
@@ -18,11 +22,13 @@ function createFloatingGIF() {
     activeGIFs.push(gif);
 }
 
+// ---------------- DOM Elements ----------------
 const welcomeScreen = document.getElementById("welcome-screen");
 const questionnaireScreen = document.getElementById("questionnaire-screen");
 const nameWelcomeScreen = document.getElementById("name-welcome-screen");
 const plinkoSection = document.getElementById("plinko-section");
 const welcomeForm = document.getElementById("welcome-form");
+const yesnoForm = document.getElementById("yesnoForm");
 const gfForm = document.getElementById("gfForm");
 const canvas = document.getElementById("gameCanvas");
 canvas.style.display = "none";
@@ -33,6 +39,7 @@ const ftinInputs = document.getElementById("ftin-inputs");
 const heightFtInput = document.querySelector("input[name='heightFt']");
 const heightInInput = document.querySelector("input[name='heightIn']");
 
+// ---------------- Height Unit Toggle ----------------
 heightUnit.addEventListener("change", () => {
     if (heightUnit.value === "cm") {
         heightCmInput.style.display = "inline-block";
@@ -49,6 +56,7 @@ heightUnit.addEventListener("change", () => {
     }
 });
 
+// ---------------- Auto Resize Textareas ----------------
 ["distinguishingFeatures","hobbies","perfectDate"].forEach(name => {
     const el = document.querySelector(`textarea[name='${name}']`);
     if(el){
@@ -59,6 +67,25 @@ heightUnit.addEventListener("change", () => {
     }
 });
 
+// ---------------- Global Data Storage ----------------
+window.bioData = {};
+window.questionnaireData = {}; // stores both Yes/No and long question answers
+
+// ---------------- Mapping Yes/No Keys ----------------
+const yesnoKeys = {
+  q1: "pineapplePizza",
+  q2: "morningPerson",
+  q3: "trans",
+  q4: "activePerson",
+  q5: "singDance",
+  q6: "photography",
+  q7: "ghosting",
+  q8: "pda",
+  q9: "peopleChange",
+  q10: "heartbroken"
+};
+
+// ---------------- Download Text File ----------------
 function downloadTxtFile(bioData, questionnaireData) {
     let content = "===== GF APPLICATION =====\n\n";
     content += "----- BIOGRAPHY -----\n";
@@ -66,8 +93,15 @@ function downloadTxtFile(bioData, questionnaireData) {
     bioOrder.forEach(key => {
         if (bioData[key] !== undefined) content += `${key}: ${bioData[key]}\n`;
     });
-    content += "\n----- QUESTIONNAIRE -----\n";
-    for (let key in questionnaireData) content += `${key}: ${questionnaireData[key]}\n`;
+    
+    content += "\n----- Y/N -----\n"; // updated title
+    for (let key in questionnaireData) {
+        if(yesnoKeys[key]) {
+            content += `${yesnoKeys[key]}: ${questionnaireData[key]}\n`;
+        } else {
+            content += `${key}: ${questionnaireData[key]}\n`; // long question
+        }
+    }
 
     const blob = new Blob([content], {type:"text/plain"});
     const link = document.createElement("a");
@@ -76,6 +110,7 @@ function downloadTxtFile(bioData, questionnaireData) {
     link.click();
 }
 
+// ---------------- Welcome Form ----------------
 welcomeForm.addEventListener("submit", e => {
     e.preventDefault();
     const bioData = {};
@@ -99,6 +134,7 @@ welcomeForm.addEventListener("submit", e => {
     nameWelcomeScreen.style.display = "flex";
 });
 
+// ---------------- Intermediate Welcome Screen ----------------
 document.getElementById("continueGif").addEventListener("click", (e) => {
     const rect = e.target.getBoundingClientRect();
     const startX = rect.left + rect.width / 2;
@@ -110,43 +146,59 @@ document.getElementById("continueGif").addEventListener("click", (e) => {
         gif.classList.add("floating-gif");
         const size = 15 + Math.random() * 25;
         gif.style.width = size + "px";
-        gif.style.left = startX + (Math.random() - 0.5) * 50 + "px";
-        gif.style.top = startY + (Math.random() - 0.5) * 50 + "px";
-        gif.style.animationDuration = (3 + Math.random() * 3) + "s";
+        gif.style.left = startX + (Math.random()-0.5)*50 + "px";
+        gif.style.top = startY + (Math.random()-0.5)*50 + "px";
+        gif.style.animationDuration = (3 + Math.random()*3) + "s";
         gif.style.zIndex = "0";
         document.body.appendChild(gif);
         activeGIFs.push(gif);
     }
+
     nameWelcomeScreen.classList.add("hidden");
-
     setTimeout(() => {
-
         nameWelcomeScreen.style.display = "none";
-
         questionnaireScreen.style.display = "flex";
         questionnaireScreen.classList.add("fade-in");
+        setTimeout(() => questionnaireScreen.classList.add("show"), 50);
 
-        setTimeout(() => {
-            questionnaireScreen.classList.add("show");
-        }, 50);
-
+        document.getElementById("questionnaireTitle").textContent = "Closed Questions";
         startFloatingGIFs();
-
-    }, 2000); 
+    }, 2000);
 });
 
+// ---------------- Yes/No Form ----------------
+yesnoForm.addEventListener("submit", e => {
+    e.preventDefault();
+
+    // store Yes/No answers
+    new FormData(yesnoForm).forEach((value,key)=>{
+        window.questionnaireData[key] = value;
+    });
+
+    yesnoForm.style.display = "none";
+    gfForm.style.display = "flex";
+
+    document.getElementById("questionnaireTitle").textContent = "Long Questions";
+
+    startFloatingGIFs();
+});
+
+// ---------------- Long Question Form ----------------
 gfForm.addEventListener("submit", e => {
     e.preventDefault();
 
-    const questionnaireData = {};
-    new FormData(gfForm).forEach((value,key)=>questionnaireData[key]=value);
+    // store long question answers
+    new FormData(gfForm).forEach((value,key)=>{
+        window.questionnaireData[key] = value;
+    });
 
-    downloadTxtFile(window.bioData || {}, questionnaireData);
+    // download all data
+    downloadTxtFile(window.bioData || {}, window.questionnaireData);
 
     questionnaireScreen.style.display = "none";
     plinkoSection.style.display = "flex";
 
-    stopFloatingGIFs(); // 🔴 stop cats when plinko appears
+    stopFloatingGIFs();
 });
 
 // ---------------- Plinko Logic ----------------
@@ -220,10 +272,8 @@ Events.on(engine,'afterUpdate',()=>{
     checkboxes.forEach((cb,i)=>{
         if(!cb.custom.scored && isOverlapping(cb, yesBox)){
             alert("Checkbox landed in YES!");
-
             stopFloatingGIFs();
-            startFloatingGIFs(); 
-
+            startFloatingGIFs();
             cb.custom.scored=true;
             World.remove(engine.world, cb);
             checkboxes.splice(i,1);
@@ -233,10 +283,8 @@ Events.on(engine,'afterUpdate',()=>{
 
 document.getElementById("yesBtn").addEventListener("click", ()=>{
     const answer = prompt("Are you sure you want to retract your statement?");
-    
     if(answer !== null){
         alert("Statement retracted.");
-
         stopFloatingGIFs();
         startFloatingGIFs(); 
     }
