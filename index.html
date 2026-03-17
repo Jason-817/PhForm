@@ -7,39 +7,47 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Welcome Screen -->
+    <!-- Biography / Welcome Form -->
     <section id="welcome-screen" class="screen">
-      <div class="form-container">
-          <h1>Welcome!</h1>
-          <form id="welcome-form">
-              <input type="text" name="name" placeholder="Your name?" required>
-              <input type="text" name="age" placeholder="Your age?" required>
+        <div class="form-container">
+            <h1>Welcome!</h1>
+            <form id="welcome-form">
+                <input type="text" name="name" placeholder="Your name?" required>
+                <input type="text" name="age" placeholder="Your age?" required>
 
-              <!-- Height row -->
-              <div class="height-row">
-                  <input type="number" name="heightCm" placeholder="Height (cm)">
-                  <div id="ftin-inputs" style="display:none;">
-                      <input type="number" name="heightFt" placeholder="ft">
-                      <input type="number" name="heightIn" placeholder="in">
-                  </div>
-                  <select id="heightUnit">
-                      <option value="cm">cm</option>
-                      <option value="ftin">ft/in</option>
-                  </select>
-              </div>
+                <!-- Height row -->
+                <div class="height-row">
+                    <input type="number" name="heightCm" placeholder="Height (cm)">
+                    <div id="ftin-inputs" style="display:none;">
+                        <input type="number" name="heightFt" placeholder="ft">
+                        <input type="number" name="heightIn" placeholder="in">
+                    </div>
+                    <select id="heightUnit">
+                        <option value="cm">cm</option>
+                        <option value="ftin">ft/in</option>
+                    </select>
+                </div>
 
-              <!-- Gender checkboxes -->
-              <div class="gender-row">
-                <label><input type="radio" name="gender" value="Male" required> Male</label>
-                <label><input type="radio" name="gender" value="Female" required> Female</label>
-              </div>
+                <!-- Gender radio buttons -->
+                <div class="gender-row">
+                    <label><input type="radio" name="gender" value="Male" required> Male</label>
+                    <label><input type="radio" name="gender" value="Female" required> Female</label>
+                </div>
 
-              <!-- Textareas for longer input -->
-              <textarea name="distinguishingFeatures" placeholder="Distinguishing Features (tattoos, piercing, sixth finger)"></textarea>
-              <textarea name="hobbies" placeholder="Hobbies?" required></textarea>
+                <textarea name="distinguishingFeatures" placeholder="Distinguishing Features (tattoos, piercing, sixth finger)"></textarea>
+                <textarea name="hobbies" placeholder="Hobbies?" required></textarea>
                 
-              <button type="submit">Next ➡️</button>
-          </form>
+                <button type="submit">Next ➡️</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Intermediate Welcome Screen -->
+    <section id="name-welcome-screen" class="screen" style="display:none;">
+        <div class="form-container">
+            <h1 id="welcomeNameText">Welcome!</h1>
+            <p>Click the GIF below to continue to the GF Application.</p>
+            <img src="yes.gif" alt="Continue" id="continueGif" style="width:100px; cursor:pointer;">
         </div>
     </section>
 
@@ -48,10 +56,8 @@
         <div class="form-container scrollable">
             <h1>GF Application</h1>
             <form id="gfForm">
-                <!-- Test question -->
                 <p>1. Your idea of a perfect date (3 sentences max):</p>
                 <textarea name="perfectDate" rows="6" required></textarea>
-
                 <button type="submit">Submit</button>
             </form>
         </div>
