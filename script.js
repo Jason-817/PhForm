@@ -108,10 +108,35 @@ welcomeForm.addEventListener("submit", e => {
 });
 
 // Click GIF to continue to questionnaire
-document.getElementById("continueGif").addEventListener("click", () => {
+document.getElementById("continueGif").addEventListener("click", (e) => {
+    const rect = e.target.getBoundingClientRect();
+    const startX = rect.left + rect.width / 2;
+    const startY = rect.top + rect.height / 2;
+
+    // Spawn small floating GIFs from GIF location
+    for (let i = 0; i < 15; i++) {
+        const gif = document.createElement("img");
+        gif.src = "yes.gif";
+        gif.classList.add("floating-gif");
+        const size = 15 + Math.random() * 25;
+        gif.style.width = size + "px";
+        gif.style.left = startX + (Math.random() - 0.5) * 50 + "px";
+        gif.style.top = startY + (Math.random() - 0.5) * 50 + "px";
+        gif.style.animationDuration = (3 + Math.random() * 3) + "s";
+        gif.style.zIndex = "0";
+        document.body.appendChild(gif);
+        activeGIFs.push(gif);
+    }
+
+    // Fade in questionnaire screen
     nameWelcomeScreen.style.display = "none";
     questionnaireScreen.style.display = "flex";
-    startFloatingGIFs(); // start GIFs only after click
+    questionnaireScreen.classList.add("fade-in");
+    setTimeout(() => {
+        questionnaireScreen.classList.add("show");
+    }, 50);
+
+    startFloatingGIFs(); // Start continuous floating GIFs after click
 });
 
 // Questionnaire form submission

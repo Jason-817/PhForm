@@ -7,7 +7,7 @@
 }
 
 body {
-    background: linear-gradient(135deg, #bde5ff, #2b7fd3);
+    background: linear-gradient(135deg, #b3e0ff, #66b2ff);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -53,6 +53,7 @@ body {
 .form-container {
     background: rgba(255,255,255,0.2);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 25px;
     border: 1px solid rgba(0,0,0,0.2);
     padding: 30px 20px;
@@ -62,6 +63,7 @@ body {
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     position: relative;
     z-index: 1;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -100,6 +102,7 @@ select:focus {
     border-color: rgba(0,0,0,0.6);
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
     background: rgba(255,255,255,0.25);
+    color: #000;
 }
 
 /* Labels and Buttons */
@@ -136,11 +139,46 @@ button:hover {
     align-items: center;
 }
 
+#ftin-inputs {
+    display: none;
+}
+
 /* Gender row */
 .gender-row {
     display: flex;
     gap: 15px;
     justify-content: center;
+}
+
+/* Intermediate Welcome Screen GIF */
+#name-welcome-screen .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+#continueGif {
+    width: 120px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+#continueGif:hover {
+    transform: scale(1.1) rotate(-5deg);
+    filter: brightness(1.2);
+}
+
+/* Fade-in animation for questionnaire */
+.fade-in {
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+}
+
+.fade-in.show {
+    opacity: 1;
 }
 
 /* Plinko Section */
