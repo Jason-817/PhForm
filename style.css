@@ -319,6 +319,12 @@ button:hover {
     margin: 20px auto 0 auto; /* center like before */
 }
 
+.long-question-step {
+    display: none; /* hidden by default */
+    flex-direction: column;
+    gap: 15px;       /* space between question, textarea, button */
+}
+
 /* Responsive */
 @media(max-width: 500px) {
     .questions-container {

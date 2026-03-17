@@ -53,107 +53,116 @@
     </section>
 
     <!-- Questionnaire Screen -->
-<section id="questionnaire-screen" class="screen" style="display:none;">
-<div class="form-container scrollable">
-  <h2 id="questionnaireTitle">Closed Questions</h2>
+    <section id="questionnaire-screen" class="screen" style="display:none;">
+        <div class="form-container scrollable">
+            <h2 id="questionnaireTitle">Closed Questions</h2>
 
-  <!-- Page 1: Yes/No Questions -->
-  <form id="yesnoForm">
-    <div class="questions-container">
-      <div class="question-row">
-          <p>1. Do you think pineapple belongs on pizza?</p>
-          <div class="radio-group">
-            <label><input type="radio" name="q1" value="Yes" required> Yes</label>
-            <label><input type="radio" name="q1" value="No"> No</label>
-          </div>
+            <!-- Page 1: Yes/No Questions -->
+            <form id="yesnoForm">
+                <div class="questions-container">
+                    <div class="question-row">
+                        <p>1. Do you think pineapple belongs on pizza?</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q1" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q1" value="No"> No</label>
+                        </div>
+                    </div>
+
+                    <div class="question-row">
+                        <p>2. Morning person?</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q2" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q2" value="No"> No</label>
+                        </div>
+                    </div>
+
+                    <div class="question-row">
+                        <p>3. Are you trans?</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q3" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q3" value="No"> No</label>
+                        </div>
+                    </div>
+
+                    <div class="question-row">
+                        <p>4. Are you an active person?</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q4" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q4" value="No"> No</label>
+                        </div>
+                    </div>
+
+                    <div class="question-row">
+                        <p>5. Do you like singing or dancing?</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q5" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q5" value="No"> No</label>
+                        </div>
+                    </div>
+
+                    <div class="question-row">
+                        <p>6. Do you like photography sessions?</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q6" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q6" value="No"> No</label>
+                        </div>
+                    </div>
+
+                    <div class="question-row">
+                        <p>7. Have you ever ghosted people?</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q7" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q7" value="No"> No</label>
+                        </div>
+                    </div>
+
+                    <div class="question-row">
+                        <p>8. PDA?</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q8" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q8" value="No"> No</label>
+                        </div>
+                    </div>
+
+                    <div class="question-row">
+                        <p>9. Do you believe people can change for the better?</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q9" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q9" value="No"> No</label>
+                        </div>
+                    </div>
+
+                    <div class="question-row">
+                        <p>10. Have you ever been heartbroken before?</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q10" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q10" value="No"> No</label>
+                        </div>
+                    </div>
+                </div>  
+                
+                <button type="submit">Next ➡️</button>
+
+            </form>
+
+            <!-- Page 2: Long Question -->
+            <form id="gfForm" style="display:none;">
+                <!-- Step 1: Friends describe you -->
+                <div class="long-question-step" data-step="1";>
+                    <p>1. What would your friends describe you? (3 sentences)</p>
+                    <textarea name="friendsDescribe" rows="6" required></textarea>
+                    <button type="button" class="next-long-question">Next ➡️</button>
+                </div>
+
+                <!-- Step 2: Ideal date -->
+                <div class="long-question-step" data-step="2" style="display:none;">
+                    <p>2. Your idea of a perfect date (3 sentences max):</p>
+                    <textarea name="perfectDate" rows="6" required></textarea>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
         </div>
-
-        <div class="question-row">
-          <p>2. Morning person?</p>
-          <div class="radio-group">
-            <label><input type="radio" name="q2" value="Yes" required> Yes</label>
-            <label><input type="radio" name="q2" value="No"> No</label>
-          </div>
-        </div>
-
-        <div class="question-row">
-          <p>3. Are you trans?</p>
-          <div class="radio-group">
-            <label><input type="radio" name="q3" value="Yes" required> Yes</label>
-            <label><input type="radio" name="q3" value="No"> No</label>
-          </div>
-        </div>
-
-        <div class="question-row">
-          <p>4. Are you an active person?</p>
-          <div class="radio-group">
-            <label><input type="radio" name="q4" value="Yes" required> Yes</label>
-            <label><input type="radio" name="q4" value="No"> No</label>
-          </div>
-        </div>
-
-        <div class="question-row">
-          <p>5. Do you like singing or dancing?</p>
-          <div class="radio-group">
-            <label><input type="radio" name="q5" value="Yes" required> Yes</label>
-            <label><input type="radio" name="q5" value="No"> No</label>
-          </div>
-        </div>
-
-        <div class="question-row">
-          <p>6. Do you like photography sessions?</p>
-          <div class="radio-group">
-            <label><input type="radio" name="q6" value="Yes" required> Yes</label>
-            <label><input type="radio" name="q6" value="No"> No</label>
-          </div>
-        </div>
-
-        <div class="question-row">
-          <p>7. Have you ever ghosted people?</p>
-          <div class="radio-group">
-            <label><input type="radio" name="q7" value="Yes" required> Yes</label>
-            <label><input type="radio" name="q7" value="No"> No</label>
-          </div>
-        </div>
-
-        <div class="question-row">
-          <p>8. PDA?</p>
-          <div class="radio-group">
-            <label><input type="radio" name="q8" value="Yes" required> Yes</label>
-            <label><input type="radio" name="q8" value="No"> No</label>
-          </div>
-        </div>
-
-        <div class="question-row">
-          <p>9. Do you believe people can change for the better?</p>
-          <div class="radio-group">
-            <label><input type="radio" name="q9" value="Yes" required> Yes</label>
-            <label><input type="radio" name="q9" value="No"> No</label>
-          </div>
-        </div>
-
-        <div class="question-row">
-          <p>10. Have you ever been heartbroken before?</p>
-          <div class="radio-group">
-            <label><input type="radio" name="q10" value="Yes" required> Yes</label>
-            <label><input type="radio" name="q10" value="No"> No</label>
-          </div>
-        </div>
-
-      </div> <!-- /questions-container -->
-
-      <!-- Next Button -->
-      <button type="submit">Next ➡️</button>
-    </form>
-
-    <!-- Page 2: Long Question -->
-<form id="gfForm" style="display:none;">
-    <p>Your idea of a perfect date (3 sentences max):</p>
-    <textarea name="perfectDate" rows="6" required></textarea>
-    <button type="submit">Submit</button>
-  </form>
-</div>
-</section>
+    </section>
 
     <!-- Plinko Section -->
     <section id="plinko-section" style="display:none;">

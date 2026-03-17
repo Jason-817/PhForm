@@ -88,18 +88,24 @@ const yesnoKeys = {
 // ---------------- Download Text File ----------------
 function downloadTxtFile(bioData, questionnaireData) {
     let content = "===== GF APPLICATION =====\n\n";
+
     content += "----- BIOGRAPHY -----\n";
     const bioOrder = ["name","age","gender","height","distinguishingFeatures","hobbies"];
     bioOrder.forEach(key => {
         if (bioData[key] !== undefined) content += `${key}: ${bioData[key]}\n`;
     });
-    
-    content += "\n----- Y/N -----\n"; // updated title
+
+    content += "\n----- Y/N -----\n";
     for (let key in questionnaireData) {
         if(yesnoKeys[key]) {
             content += `${yesnoKeys[key]}: ${questionnaireData[key]}\n`;
-        } else {
-            content += `${key}: ${questionnaireData[key]}\n`; // long question
+        }
+    }
+
+    content += "\n----- LONG QUESTIONS -----\n";
+    for (let key in questionnaireData) {
+        if(!yesnoKeys[key]) { // only long questions
+            content += `${key}: ${questionnaireData[key]}\n`;
         }
     }
 
@@ -184,15 +190,42 @@ yesnoForm.addEventListener("submit", e => {
 });
 
 // ---------------- Long Question Form ----------------
+const longQuestionSteps = document.querySelectorAll(".long-question-step");
+let currentStep = 0;
+
+// Show first step
+longQuestionSteps[currentStep].style.display = "flex";
+
+// Next button logic
+document.querySelectorAll(".next-long-question").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const textarea = longQuestionSteps[currentStep].querySelector("textarea");
+        if(!textarea.value.trim()) {
+            alert("Please answer the question before continuing.");
+            return;
+        }
+
+        window.questionnaireData[textarea.name] = textarea.value.trim();
+
+        longQuestionSteps[currentStep].style.display = "none";
+        currentStep++;
+        if(longQuestionSteps[currentStep]) {
+            longQuestionSteps[currentStep].style.display = "flex";
+        }
+    });
+});
+
+// final Submit button
 gfForm.addEventListener("submit", e => {
     e.preventDefault();
 
-    // store long question answers
-    new FormData(gfForm).forEach((value,key)=>{
-        window.questionnaireData[key] = value;
-    });
+    // store last step answer
+    const textarea = longQuestionSteps[currentStep].querySelector("textarea");
+    if(textarea.value.trim()) {
+        window.questionnaireData[textarea.name] = textarea.value.trim();
+    }
 
-    // download all data
+    // download txt file
     downloadTxtFile(window.bioData || {}, window.questionnaireData);
 
     questionnaireScreen.style.display = "none";
