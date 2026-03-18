@@ -1,4 +1,3 @@
-// ---------------- Floating GIFs ----------------
 let activeGIFs = [];
 
 function startFloatingGIFs() {
@@ -22,7 +21,6 @@ function createFloatingGIF() {
     activeGIFs.push(gif);
 }
 
-// ---------------- DOM Elements ----------------
 const welcomeScreen = document.getElementById("welcome-screen");
 const questionnaireScreen = document.getElementById("questionnaire-screen");
 const nameWelcomeScreen = document.getElementById("name-welcome-screen");
@@ -39,7 +37,6 @@ const ftinInputs = document.getElementById("ftin-inputs");
 const heightFtInput = document.querySelector("input[name='heightFt']");
 const heightInInput = document.querySelector("input[name='heightIn']");
 
-// ---------------- Height Unit Toggle ----------------
 heightUnit.addEventListener("change", () => {
     if (heightUnit.value === "cm") {
         heightCmInput.style.display = "inline-block";
@@ -56,7 +53,6 @@ heightUnit.addEventListener("change", () => {
     }
 });
 
-// ---------------- Auto Resize Textareas ----------------
 ["distinguishingFeatures","hobbies","perfectDate"].forEach(name => {
     const el = document.querySelector(`textarea[name='${name}']`);
     if(el){
@@ -67,11 +63,9 @@ heightUnit.addEventListener("change", () => {
     }
 });
 
-// ---------------- Global Data Storage ----------------
 window.bioData = {};
-window.questionnaireData = {}; // stores both Yes/No and long question answers
+window.questionnaireData = {}; 
 
-// ---------------- Mapping Yes/No Keys ----------------
 const yesnoKeys = {
   q1: "pineapplePizza",
   q2: "morningPerson",
@@ -97,17 +91,12 @@ function downloadTxtFile(bioData, questionnaireData) {
 
     content += "\n----- Y/N -----\n";
     for (let key in questionnaireData) {
-        if(yesnoKeys[key]) {
-            content += `${yesnoKeys[key]}: ${questionnaireData[key]}\n`;
-        }
+        if(yesnoKeys[key]) content += `${yesnoKeys[key]}: ${questionnaireData[key]}\n`;
     }
 
-   content += "\n----- LONG QUESTIONS -----\n";
-for (let key in questionnaireData) {
-    // anything not in yesnoKeys is long question
-    if(!yesnoKeys[key]) {
-        content += `${key}: ${questionnaireData[key]}\n`;
-    }
+    content += "\n----- LONG QUESTIONS -----\n";
+    for (let key in questionnaireData) {
+        if(!yesnoKeys[key]) content += `${key}: ${questionnaireData[key]}\n`;
     }
 
     const blob = new Blob([content], {type:"text/plain"});
@@ -177,7 +166,6 @@ document.getElementById("continueGif").addEventListener("click", (e) => {
 yesnoForm.addEventListener("submit", e => {
     e.preventDefault();
 
-    // store Yes/No answers
     new FormData(yesnoForm).forEach((value,key)=>{
         window.questionnaireData[key] = value;
     });
@@ -194,7 +182,6 @@ yesnoForm.addEventListener("submit", e => {
 const longQuestionSteps = document.querySelectorAll(".long-question-step");
 let currentStep = 0;
 
-// Show first step initially
 function showCurrentStep() {
     longQuestionSteps.forEach((step, index) => {
         step.style.display = index === currentStep ? "flex" : "none";
@@ -202,12 +189,10 @@ function showCurrentStep() {
 }
 showCurrentStep();
 
-// "Next" buttons for steps before the last one
 document.querySelectorAll(".next-long-question").forEach(btn => {
     btn.addEventListener("click", () => {
         const textareas = longQuestionSteps[currentStep].querySelectorAll("textarea");
 
-        // Ensure all textareas in current step are filled
         for (let ta of textareas) {
             if (!ta.value.trim()) {
                 alert("Please answer all questions before continuing.");
@@ -215,33 +200,25 @@ document.querySelectorAll(".next-long-question").forEach(btn => {
             }
         }
 
-        // Save all answers in current step
         textareas.forEach(ta => {
             window.questionnaireData[ta.name] = ta.value.trim();
         });
 
-        // Move to next step
         currentStep++;
-        if (longQuestionSteps[currentStep]) {
-            showCurrentStep();
-        }
+        if (longQuestionSteps[currentStep]) showCurrentStep();
     });
 });
 
-// Final Submit button (on last step)
 gfForm.addEventListener("submit", e => {
     e.preventDefault();
 
-    // Save all textareas in the current (last) step
     const textareas = longQuestionSteps[currentStep].querySelectorAll("textarea");
     textareas.forEach(ta => {
         if(ta.value.trim()) window.questionnaireData[ta.name] = ta.value.trim();
     });
 
-    // Download all data
     downloadTxtFile(window.bioData || {}, window.questionnaireData);
 
-    // Hide questionnaire and show plinko
     questionnaireScreen.style.display = "none";
     plinkoSection.style.display = "flex";
 
@@ -284,16 +261,11 @@ Render.run(render);
 
 Events.on(render, 'afterRender', () => {
     const ctx = render.context;
-
-    ctx.font = "bold 20px Poppins"; // match form font
+    ctx.font = "bold 20px Poppins"; 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = "#fff"; // white text for contrast
-
-    // YES on green box
+    ctx.fillStyle = "#fff"; 
     ctx.fillText("YES", yesBox.position.x, yesBox.position.y);
-
-    // NO on red box
     ctx.fillText("NO", noBox.position.x, noBox.position.y);
 });
 
@@ -333,9 +305,10 @@ Events.on(engine,'collisionStart', event => {
 Events.on(engine,'afterUpdate',()=>{
     checkboxes.forEach((cb,i)=>{
         if(!cb.custom.scored && isOverlapping(cb, yesBox)){
-            alert("Checkbox landed in YES!");
+            plinkoSection.style.display = "none";
+            document.getElementById("final-screen").style.display = "flex";
             stopFloatingGIFs();
-            startFloatingGIFs();
+            launchFinalCelebration(); 
             cb.custom.scored=true;
             World.remove(engine.world, cb);
             checkboxes.splice(i,1);
@@ -343,16 +316,110 @@ Events.on(engine,'afterUpdate',()=>{
     });
 });
 
-document.getElementById("yesBtn").addEventListener("click", ()=>{
-    const answer = prompt("Are you sure you want to retract your statement?");
-    if(answer !== null){
-        alert("Statement retracted.");
-        stopFloatingGIFs();
-        startFloatingGIFs(); 
+// ---------------- Final Celebration ----------------
+function launchFinalCelebration() {
+    const fireworksCanvas = document.createElement("canvas");
+    fireworksCanvas.id = "fireworksCanvas";
+    fireworksCanvas.style.position = "fixed";
+    fireworksCanvas.style.top = "0";
+    fireworksCanvas.style.left = "0";
+    fireworksCanvas.style.width = "100%";
+    fireworksCanvas.style.height = "100%";
+    fireworksCanvas.style.pointerEvents = "none";
+    fireworksCanvas.style.zIndex = "9998";
+    document.body.appendChild(fireworksCanvas);
+
+    const fwCtx = fireworksCanvas.getContext("2d");
+    fireworksCanvas.width = window.innerWidth;
+    fireworksCanvas.height = window.innerHeight;
+
+    class Firework {
+        constructor() {
+            this.x = Math.random() * fireworksCanvas.width;
+            this.y = fireworksCanvas.height;
+            this.targetY = Math.random() * fireworksCanvas.height / 2;
+            this.particles = [];
+            this.exploded = false;
+        }
+        update() {
+            if (!this.exploded) {
+                this.y -= 8;
+                if (this.y <= this.targetY) this.explode();
+            } else {
+                this.particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.1;
+                    p.alpha -= 0.02;
+                });
+                this.particles = this.particles.filter(p => p.alpha > 0);
+            }
+        }
+        explode() {
+            this.exploded = true;
+            for (let i = 0; i < 30; i++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const speed = Math.random() * 5 + 2;
+                this.particles.push({
+                    x: this.x,
+                    y: this.y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    alpha: 1,
+                    color: `hsl(${Math.random()*360},100%,50%)`
+                });
+            }
+        }
+        draw(ctx) {
+            if (!this.exploded) {
+                ctx.fillStyle = "white";
+                ctx.fillRect(this.x, this.y, 2, 10);
+            } else {
+                this.particles.forEach(p => {
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                });
+            }
+        }
     }
+
+    const fireworks = [];
+    setInterval(() => fireworks.push(new Firework()), 500);
+
+    function animateFireworks() {
+        fwCtx.clearRect(0,0,fireworksCanvas.width,fireworksCanvas.height);
+        fireworks.forEach(f => {
+            f.update();
+            f.draw(fwCtx);
+        });
+        requestAnimationFrame(animateFireworks);
+    }
+    animateFireworks();
+
+    const emojis = ["🎉","💖","✨","🔥","🥳","🌟"];
+    setInterval(() => {
+        const emoji = document.createElement("div");
+        emoji.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        emoji.className = "flying-emoji";
+        emoji.style.left = Math.random() * window.innerWidth + "px";
+        emoji.style.fontSize = (20 + Math.random()*30) + "px";
+        document.body.appendChild(emoji);
+        setTimeout(()=>emoji.remove(), 3000);
+    }, 150);
+}
+
+document.getElementById("yesBtn").addEventListener("click", ()=> {
+    plinkoSection.style.display = "none";
+    document.getElementById("final-screen").style.display = "flex";
+    stopFloatingGIFs();
+    launchFinalCelebration();
 });
 
-document.getElementById("noBtn").addEventListener("click", ()=>{
-    canvas.style.display="block";
+document.getElementById("noBtn").addEventListener("click", ()=> {
+    canvas.style.display = "block";
     dropCheckbox();
 });
