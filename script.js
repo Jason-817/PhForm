@@ -87,7 +87,7 @@ const yesnoKeys = {
 
 // ---------------- Download Text File ----------------
 function downloadTxtFile(bioData, questionnaireData) {
-    let content = "===== GF APPLICATION =====\n\n";
+    let content = "===== Getting to Know You APPLICATION =====\n\n";
 
     content += "----- BIOGRAPHY -----\n";
     const bioOrder = ["name","age","gender","height","distinguishingFeatures","hobbies"];
@@ -137,7 +137,7 @@ welcomeForm.addEventListener("submit", e => {
 
     welcomeScreen.style.display = "none";
     const welcomeText = document.getElementById("welcomeNameText");
-    welcomeText.textContent = `Welcome ${bioData.name} to the GF Application!`;
+    welcomeText.textContent = `Welcome ${bioData.name} to the Getting to Know You Application!`;
     nameWelcomeScreen.style.display = "flex";
 });
 
