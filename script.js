@@ -80,13 +80,13 @@ window.bioData = {};
 window.questionnaireData = {}; 
 
 const yesnoKeys = {
-  q1: "pineapplePizza",
-  q2: "morningPerson",
-  q3: "trans",
-  q4: "activePerson",
+  q1: "laughAtOwnJokes",
+  q2: "cheesyPickUplines",
+  q3: "dye",
+  q4: "drama",
   q5: "singDance",
   q6: "photography",
-  q7: "ghosting",
+  q7: "competitive",
   q8: "pda",
   q9: "peopleChange",
   q10: "heartbroken"
