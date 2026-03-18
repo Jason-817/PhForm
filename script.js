@@ -21,6 +21,8 @@ function createFloatingGIF() {
     activeGIFs.push(gif);
 }
 
+
+
 const welcomeScreen = document.getElementById("welcome-screen");
 const questionnaireScreen = document.getElementById("questionnaire-screen");
 const nameWelcomeScreen = document.getElementById("name-welcome-screen");
@@ -30,6 +32,17 @@ const yesnoForm = document.getElementById("yesnoForm");
 const gfForm = document.getElementById("gfForm");
 const canvas = document.getElementById("gameCanvas");
 canvas.style.display = "none";
+
+function resizePlinkoCanvas() {
+
+    const maxHeight = window.innerHeight * 0.55;
+
+    canvas.style.height = maxHeight + "px";
+
+}
+
+window.addEventListener("resize", resizePlinkoCanvas);
+resizePlinkoCanvas();
 
 const heightUnit = document.getElementById("heightUnit");
 const heightCmInput = document.querySelector("input[name='heightCm']");
