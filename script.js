@@ -80,15 +80,33 @@ window.bioData = {};
 window.questionnaireData = {}; 
 
 const yesnoKeys = {
-  q1: "laughAtOwnJokes",
-  q2: "cheesyPickUplines",
-  q3: "drama",
-  q4: "singDance",
-  q5: "photography",
-  q6: "competitive",
-  q7: "pda",
-  q8: "peopleChange",
-  q9: "heartbroken"
+  q1: "Do you laugh at your own jokes?",
+  q2: "Do you enjoy cheesy pick-up lines?",
+  q3: "Do you enjoy drama?",
+  q4: "Do you sing or dance when nobody is watching?",
+  q5: "Do you like taking photos or videos of memories?",
+  q6: "Are you competitive?",
+  q7: "Are you comfortable with PDA?",
+  q8: "Do you believe people can truly change?",
+  q9: "Have you ever been heartbroken?"
+};
+
+const longQuestionKeys = {
+
+  friendsDescribe: "How would your friends describe you?",
+  doWithMoney: 'What would you do if you had "X" millions of pesos?',
+  favoriteSongs: "Your favorite songs?",
+  favoriteMovies: "Your favorite movies/shows?",
+  dreamTravel: "If you could travel anywhere around the world and there were no issues, where would you go?",
+  experienceAgain: "What is something you've done/felt/seen/etc. that you wish you could experience again for the first time?",
+  idealDateFull: "What is your ideal date from start to finish?",
+  salaryExpectation: "Give me a range of the salary you need to have to meet your needs / expected salary of your partner?",
+  bfFightScenario: "What are you doing if your boyfriend gets his ass beat in front of you while defending you?",
+  dealbreakers: "What are your dealbreakers?",
+  partnerQualities: "What are the most important qualities you look for in a romantic partner?",
+  misunderstoodTrait: "What is something people usually misunderstand about you?",
+  crazyTrait: "If you had to describe one habit or trait of yours that might drive a partner crazy, what would it be and why?",
+  selfCompliments: "Give yourself at least 3 compliments (what are you most proud of about yourself?)"
 };
 
 // ---------------- Download Text File ----------------
@@ -101,14 +119,22 @@ function downloadTxtFile(bioData, questionnaireData) {
         if (bioData[key] !== undefined) content += `${key}: ${bioData[key]}\n`;
     });
 
-    content += "\n----- Y/N -----\n";
+    content += "\n----- YES / NO QUESTIONS -----\n\n";
+
     for (let key in questionnaireData) {
-        if(yesnoKeys[key]) content += `${yesnoKeys[key]}: ${questionnaireData[key]}\n`;
+        if (yesnoKeys[key]) {
+            content += `${yesnoKeys[key]}\n`;
+            content += `Answer: ${questionnaireData[key]}\n\n`;
+        }
     }
 
-    content += "\n----- LONG QUESTIONS -----\n";
+    content += "\n----- LONG QUESTIONS -----\n\n";
+
     for (let key in questionnaireData) {
-        if(!yesnoKeys[key]) content += `${key}: ${questionnaireData[key]}\n`;
+        if (longQuestionKeys[key]) {
+            content += `${longQuestionKeys[key]}\n`;
+            content += `Answer: ${questionnaireData[key]}\n\n`;
+        }
     }
 
     const blob = new Blob([content], {type:"text/plain"});
