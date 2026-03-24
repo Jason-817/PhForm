@@ -82,14 +82,13 @@ window.questionnaireData = {};
 const yesnoKeys = {
   q1: "laughAtOwnJokes",
   q2: "cheesyPickUplines",
-  q3: "dye",
-  q4: "drama",
-  q5: "singDance",
-  q6: "photography",
-  q7: "competitive",
-  q8: "pda",
-  q9: "peopleChange",
-  q10: "heartbroken"
+  q3: "drama",
+  q4: "singDance",
+  q5: "photography",
+  q6: "competitive",
+  q7: "pda",
+  q8: "peopleChange",
+  q9: "heartbroken"
 };
 
 // ---------------- Download Text File ----------------
