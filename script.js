@@ -82,7 +82,7 @@ window.questionnaireData = {};
 const yesnoKeys = {
   q1: "Do you laugh at your own jokes?",
   q2: "Do you enjoy cheesy pick-up lines?",
-  q3: "Do you enjoy drama?",
+  q3: "Do you listen or tell drama?",
   q4: "Do you sing or dance when nobody is watching?",
   q5: "Do you like taking photos or videos of memories?",
   q6: "Are you competitive?",
