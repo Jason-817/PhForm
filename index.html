@@ -33,7 +33,6 @@
                     <label><input type="radio" name="gender" value="Female" required> Female</label>
                 </div>
 
-                <textarea name="distinguishingFeatures" placeholder="Distinguishing Features (tattoos, piercing, sixth finger)"></textarea>
                 <textarea name="hobbies" placeholder="Hobbies?" required></textarea>
                 
                 <button type="submit">Next ➡️</button>
@@ -58,8 +57,10 @@
             <!-- Page 1: Yes/No Questions -->
             <form id="yesnoForm">
                 <div class="questions-container">
+                    
+
                     <div class="question-row">
-                        <p>1. Do you laugh at your own jokes?</p>
+                        <p>1. PDA?</p>
                         <div class="radio-group">
                             <label><input type="radio" name="q1" value="Yes" required> Yes</label>
                             <label><input type="radio" name="q1" value="No"> No</label>
@@ -67,7 +68,7 @@
                     </div>
 
                     <div class="question-row">
-                        <p>2. Do you secretly enjoy cheesy pick-up lines?</p>
+                        <p>2. Have you ever been heartbroken before?</p>
                         <div class="radio-group">
                             <label><input type="radio" name="q2" value="Yes" required> Yes</label>
                             <label><input type="radio" name="q2" value="No"> No</label>
@@ -75,58 +76,10 @@
                     </div>
 
                     <div class="question-row">
-                        <p>3. Are you the type to listen to people's dramas or the one to tell the drama?</p>
+                        <p>3. Do you believe people can change for the better?</p>
                         <div class="radio-group">
-                            <label><input type="radio" name="q3" value="Listen" required> Listen</label>
-                            <label><input type="radio" name="q3" value="Tell"> Tell</label>
-                        </div>
-                    </div>
-
-                    <div class="question-row">
-                        <p>4. Do you like singing or dancing?</p>
-                        <div class="radio-group">
-                            <label><input type="radio" name="q4" value="Yes" required> Yes</label>
-                            <label><input type="radio" name="q4" value="No"> No</label>
-                        </div>
-                    </div>
-
-                    <div class="question-row">
-                        <p>5. Do you like photography sessions?</p>
-                        <div class="radio-group">
-                            <label><input type="radio" name="q5" value="Yes" required> Yes</label>
-                            <label><input type="radio" name="q5" value="No"> No</label>
-                        </div>
-                    </div>
-
-                    <div class="question-row">
-                        <p>6. Are you competitive?</p>
-                        <div class="radio-group">
-                            <label><input type="radio" name="q6" value="Yes" required> Yes</label>
-                            <label><input type="radio" name="q6" value="No"> No</label>
-                        </div>
-                    </div>
-
-                    <div class="question-row">
-                        <p>7. PDA?</p>
-                        <div class="radio-group">
-                            <label><input type="radio" name="q7" value="Yes" required> Yes</label>
-                            <label><input type="radio" name="q7" value="No"> No</label>
-                        </div>
-                    </div>
-
-                    <div class="question-row">
-                        <p>8. Have you ever been heartbroken before?</p>
-                        <div class="radio-group">
-                            <label><input type="radio" name="q8" value="Yes" required> Yes</label>
-                            <label><input type="radio" name="q8" value="No"> No</label>
-                        </div>
-                    </div>
-
-                    <div class="question-row">
-                        <p>9. Do you believe people can change for the better?</p>
-                        <div class="radio-group">
-                            <label><input type="radio" name="q9" value="Yes" required> Yes</label>
-                            <label><input type="radio" name="q9" value="No"> No</label>
+                            <label><input type="radio" name="q3" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="q3" value="No"> No</label>
                         </div>
                     </div>
                 </div>  
@@ -137,67 +90,40 @@
 
             <!-- Page 2: Long Question -->
             <form id="gfForm" style="display:none;">
-                <div class="long-question-step" data-step="1">
-                    <p>1. How would your friends describe you?</p>
-                    <textarea name="friendsDescribe" rows="6" required></textarea>
-                    <button type="button" class="next-long-question">Next ➡️</button>
-                </div>
-                <div class="long-question-step" data-step="2" style="display:none;">
-                    <p>2. What would you do if you had "X" millions of pesos?</p>
+                <div class="long-question-step" data-step="1" style="display:none;">
+                    <p>1. What would you do if you had "X" millions of pesos?</p>
                     <textarea name="doWithMoney" rows="6" required></textarea>
                     <button type="button" class="next-long-question">Next ➡️</button>
                 </div>
-                <div class="long-question-step" data-step="3" style="display:none;">
-                    <p>3. Your favorite songs?</p>
-                    <textarea name="favoriteSongs" rows="4" required></textarea>
-                    <p>4. Your favorite movies/shows?</p>
-                    <textarea name="favoriteMovies" rows="4" required></textarea>
-                    <button type="button" class="next-long-question">Next ➡️</button>
-                </div>
-                <div class="long-question-step" data-step="4" style="display:none;">
-                    <p>5. If you could travel anywhere around the world and there are no issues, where would you go?</p>
-                    <textarea name="dreamTravel" rows="5" required></textarea>
-                    <button type="button" class="next-long-question">Next ➡️</button>
-                </div>
-                <div class="long-question-step" data-step="5" style="display:none;">
-                    <p>6. What is something you've done/felt/seen/etc. that you wish you could experience again for the first time?</p>
+
+                <div class="long-question-step" data-step="2" style="display:none;">
+                    <p>2. What is something you've done/felt/seen/etc. that you wish you could experience again for the first time?</p>
                     <textarea name="experienceAgain" rows="5" required></textarea>
                     <button type="button" class="next-long-question">Next ➡️</button>
                 </div>
-                <div class="long-question-step" data-step="6" style="display:none;">
-                    <p>7. What’s your ideal date from start to finish?</p>
+
+                <div class="long-question-step" data-step="3" style="display:none;">
+                    <p>3. What’s your ideal date from start to finish?</p>
                     <textarea name="idealDateFull" rows="5" required></textarea>
                     <button type="button" class="next-long-question">Next ➡️</button>
                 </div>
-                <div class="long-question-step" data-step="7" style="display:none;">
-                    <p>8. Give me a range of the salary you need to have to meet your needs / expected salary of your partner?</p>
-                    <textarea name="salaryExpectation" rows="5" required></textarea>
-                    <button type="button" class="next-long-question">Next ➡️</button>
-                </div>
-                <div class="long-question-step" data-step="8" style="display:none;">
-                    <p>9. What are you doing if your boyfriend gets his ass beat in front of you while defending you?</p>
-                    <textarea name="bfFightScenario" rows="5" required></textarea>
-                    <button type="button" class="next-long-question">Next ➡️</button>
-                </div>
-                <div class="long-question-step" data-step="9" style="display:none;">
-                    <p>10. What are your dealbreakers?</p>
+
+                <div class="long-question-step" data-step="4" style="display:none;">
+                    <p>4. What are your dealbreakers?</p>
                     <textarea name="dealbreakers" rows="4" required></textarea>
-                    <p>11. What is the most important quality(ies) you look for in a romantic partner?</p>
+                    <p>5. What is the most important quality(ies) you look for in a romantic partner?</p>
                     <textarea name="partnerQualities" rows="4" required></textarea>
                     <button type="button" class="next-long-question">Next ➡️</button>
                 </div>
-                <div class="long-question-step" data-step="10" style="display:none;">
-                    <p>12. What’s something people usually misunderstand about you?</p>
+
+                <div class="long-question-step" data-step="5" style="display:none;">
+                    <p>6. What’s something people usually misunderstand about you?</p>
                     <textarea name="misunderstoodTrait" rows="5" required></textarea>
                     <button type="button" class="next-long-question">Next ➡️</button>
                 </div>
-                <div class="long-question-step" data-step="11" style="display:none;">
-                    <p>13. If you had to describe one habit or trait of yours that might drive a partner crazy, what would it be and why?</p>
-                    <textarea name="crazyTrait" rows="5" required></textarea>
-                    <button type="button" class="next-long-question">Next ➡️</button>
-                </div>
-                <div class="long-question-step" data-step="12" style="display:none;">
-                    <p>14. Give yourself at least 3 compliments (what are you most proud of about yourself?)</p>
+
+                <div class="long-question-step" data-step="6" style="display:none;">
+                    <p>7. Give yourself at least 3 compliments (what are you most proud of about yourself?)</p>
                     <textarea name="selfCompliments" rows="5" required></textarea>
                     <button type="submit">Submit & Download Application</button>
                 </div>
@@ -227,6 +153,7 @@
     </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

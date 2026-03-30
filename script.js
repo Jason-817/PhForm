@@ -80,15 +80,9 @@ window.bioData = {};
 window.questionnaireData = {}; 
 
 const yesnoKeys = {
-  q1: "Do you laugh at your own jokes?",
-  q2: "Do you enjoy cheesy pick-up lines?",
-  q3: "Do you listen or tell drama?",
-  q4: "Do you sing or dance when nobody is watching?",
-  q5: "Do you like taking photos or videos of memories?",
-  q6: "Are you competitive?",
-  q7: "Are you comfortable with PDA?",
-  q8: "Do you believe people can truly change?",
-  q9: "Have you ever been heartbroken?"
+  q1: "Are you cool with PDA?",
+  q2: "Have you ever been heartbroken?",
+  q3: "Do you believe people can truly change?"
 };
 
 const longQuestionKeys = {
@@ -110,38 +104,60 @@ const longQuestionKeys = {
 };
 
 // ---------------- Download Text File ----------------
-function downloadTxtFile(bioData, questionnaireData) {
-    let content = "===== Getting to Know You APPLICATION =====\n\n";
+function downloadPdfFile(bioData, questionnaireData) {
 
-    content += "----- BIOGRAPHY -----\n";
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let y = 10;
+
+    function addLine(text) {
+        const lines = doc.splitTextToSize(text, 180);
+        lines.forEach(line => {
+            if (y > 280) {
+                doc.addPage();
+                y = 10;
+            }
+            doc.text(line, 10, y);
+            y += 7;
+        });
+    }
+
+    addLine("===== Getting to Know You APPLICATION =====");
+    y += 5;
+
+    addLine("----- BIOGRAPHY -----");
+
     const bioOrder = ["name","age","gender","height","distinguishingFeatures","hobbies"];
     bioOrder.forEach(key => {
-        if (bioData[key] !== undefined) content += `${key}: ${bioData[key]}\n`;
+        if (bioData[key]) {
+            addLine(`${key}: ${bioData[key]}`);
+        }
     });
 
-    content += "\n----- YES / NO QUESTIONS -----\n\n";
+    y += 5;
+    addLine("----- YES / NO QUESTIONS -----");
 
     for (let key in questionnaireData) {
         if (yesnoKeys[key]) {
-            content += `${yesnoKeys[key]}\n`;
-            content += `Answer: ${questionnaireData[key]}\n\n`;
+            addLine(yesnoKeys[key]);
+            addLine("Answer: " + questionnaireData[key]);
+            y += 3;
         }
     }
 
-    content += "\n----- LONG QUESTIONS -----\n\n";
+    y += 5;
+    addLine("----- LONG QUESTIONS -----");
 
     for (let key in questionnaireData) {
         if (longQuestionKeys[key]) {
-            content += `${longQuestionKeys[key]}\n`;
-            content += `Answer: ${questionnaireData[key]}\n\n`;
+            addLine(longQuestionKeys[key]);
+            addLine("Answer: " + questionnaireData[key]);
+            y += 3;
         }
     }
 
-    const blob = new Blob([content], {type:"text/plain"});
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "application.txt";
-    link.click();
+    doc.save("application.pdf");
 }
 
 // ---------------- Welcome Form ----------------
@@ -255,10 +271,10 @@ gfForm.addEventListener("submit", e => {
         if(ta.value.trim()) window.questionnaireData[ta.name] = ta.value.trim();
     });
 
-    downloadTxtFile(window.bioData || {}, window.questionnaireData);
+    downloadPdfFile(window.bioData || {}, window.questionnaireData);
 
     questionnaireScreen.style.display = "none";
-    plinkoSection.style.display = "flex";
+    //plinkoSection.style.display = "flex"; remove comment to reapply the plinko section
 
     stopFloatingGIFs();
 });
