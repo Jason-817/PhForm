@@ -104,7 +104,7 @@ const longQuestionKeys = {
 };
 
 // ---------------- Download Text File ----------------
-function downloadPdfFile(bioData, questionnaireData) {
+/*function downloadPdfFile(bioData, questionnaireData) {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
@@ -193,6 +193,75 @@ function downloadPdfFile(bioData, questionnaireData) {
         pdf.deletePage(1); // remove empty first page
         pdf.save((bioData.name || "application") + "_application.pdf");
     };
+}*/
+
+function downloadPdfFile(bioData, questionnaireData) {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    const pxPerMm = 96 / 25.4; 
+    const containerWidth = pageWidth * pxPerMm;
+    const containerHeight = pageHeight * pxPerMm;
+
+    const container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.left = "-9999px";
+    container.style.width = containerWidth + "px";
+    container.style.height = containerHeight + "px";
+    container.style.fontFamily = "Poppins, sans-serif";
+    container.style.fontSize = "14px";
+    container.style.padding = "20px";
+    container.style.backgroundImage = "url('boat.jpg')";
+    container.style.backgroundSize = "100% 100%";
+    container.style.backgroundPosition = "center";
+    container.style.backgroundRepeat = "no-repeat";
+    container.style.color = "#fff"; // make all text white
+
+    // Add a semi-transparent overlay behind text for better readability
+    let htmlContent = `
+        <div style="
+            width:100%; 
+            height:100%; 
+            display:flex; 
+            flex-direction:column; 
+            justify-content:flex-start; 
+            background: rgba(0,0,0,0.4); /* dark overlay */
+            padding: 15px;
+            border-radius: 10px;
+        ">
+            <h2>Biography</h2>
+            <p><strong>Name:</strong> ${bioData.name}</p>
+            <p><strong>Age:</strong> ${bioData.age}</p>
+            <p><strong>Gender:</strong> ${bioData.gender}</p>
+            <p><strong>Height:</strong> ${bioData.height}</p>
+            <p><strong>Hobbies:</strong> ${bioData.hobbies}</p>
+            <hr>
+            <h2>Closed Questions</h2>
+            ${Object.keys(questionnaireData)
+              .filter(k => yesnoKeys[k])
+              .map(k => `<p><strong>${yesnoKeys[k]}:</strong> ${questionnaireData[k]}</p>`)
+              .join("")}
+            <hr>
+            <h2>Long Questions</h2>
+            ${Object.keys(longQuestionKeys)
+              .filter(k => questionnaireData[k])
+              .map(k => `<p><strong>${longQuestionKeys[k]}:</strong> ${questionnaireData[k]}</p>`)
+              .join("")}
+        </div>
+    `;
+    container.innerHTML = htmlContent;
+    document.body.appendChild(container);
+
+    html2canvas(container, { scale: 2 }).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+
+        pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pageHeight);
+        pdf.save((bioData.name || "application") + "_application.pdf");
+
+        container.remove();
+    });
 }
 
 // ---------------- Welcome Form ----------------
