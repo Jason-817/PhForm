@@ -109,18 +109,16 @@ function downloadPdfFile(bioData, questionnaireData) {
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const pxPerMm = 96 / 25.4; 
+    const pxPerMm = 96 / 25.4; // pixels per mm for html2canvas
     const containerWidth = pageWidth * pxPerMm;
-    const containerHeight = pageHeight * pxPerMm;
 
     const container = document.createElement("div");
     container.style.position = "absolute";
     container.style.left = "-9999px";
     container.style.width = containerWidth + "px";
-    container.style.height = containerHeight + "px";
+    container.style.padding = "20px";
     container.style.fontFamily = "Poppins, sans-serif";
     container.style.fontSize = "14px";
-    container.style.padding = "20px";
     container.style.backgroundImage = "url('boat.jpg')";
     container.style.backgroundSize = "100% 100%";
     container.style.backgroundPosition = "center";
@@ -129,58 +127,67 @@ function downloadPdfFile(bioData, questionnaireData) {
 
     let questionNumber = 1;
 
-    // Closed questions HTML
+    // Helper function to preserve newlines
+    const preserveLineBreaks = (text) => {
+        if (!text) return "";
+        return text.replace(/\n/g, "<br>");
+    };
+
     const closedQuestionsHtml = Object.keys(questionnaireData)
         .filter(k => yesnoKeys[k])
-        .map(k => `<p><strong>Question ${questionNumber++}:</strong> ${yesnoKeys[k]}<br><em>Answer:</em> ${questionnaireData[k]}</p>`)
+        .map(k => `<p><strong>Question ${questionNumber++}:</strong> ${yesnoKeys[k]}<br><em>Answer:</em> ${preserveLineBreaks(questionnaireData[k])}</p>`)
         .join("");
 
-    // Long questions HTML, separated visually
     const longQuestionsHtml = Object.keys(longQuestionKeys)
         .filter(k => questionnaireData[k])
         .map(k => `
             <div style="margin-bottom:10px; padding-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.5);">
                 <p><strong>Question ${questionNumber++}:</strong> ${longQuestionKeys[k]}</p>
-                <p><em>Answer:</em> ${questionnaireData[k]}</p>
+                <p><em>Answer:</em><br>${preserveLineBreaks(questionnaireData[k])}</p>
             </div>
         `)
         .join("");
 
-    // Full HTML
-    let htmlContent = `
-        <div style="width:100%; height:100%; display:flex; flex-direction:column; gap:15px; padding:15px;">
-            
-            <!-- Biography Card -->
+    container.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:15px;">
             <div style="background: rgba(0,0,0,0.5); padding:15px; border-radius:10px;">
                 <h2>Biography</h2>
                 <p><strong>Name:</strong> ${bioData.name}</p>
                 <p><strong>Age:</strong> ${bioData.age}</p>
                 <p><strong>Gender:</strong> ${bioData.gender}</p>
                 <p><strong>Height:</strong> ${bioData.height}</p>
-                <p><strong>Hobbies:</strong> ${bioData.hobbies}</p>
+                <p><strong>Hobbies:</strong> ${preserveLineBreaks(bioData.hobbies)}</p>
             </div>
 
-            <!-- Closed Questions Card -->
             <div style="background: rgba(0,0,0,0.5); padding:15px; border-radius:10px;">
                 <h2>Closed Questions</h2>
                 ${closedQuestionsHtml}
             </div>
 
-            <!-- Long Questions Card -->
             <div style="background: rgba(0,0,0,0.5); padding:15px; border-radius:10px;">
                 <h2>Long Questions</h2>
                 ${longQuestionsHtml}
             </div>
-
         </div>
     `;
 
-    container.innerHTML = htmlContent;
     document.body.appendChild(container);
 
     html2canvas(container, { scale: 2 }).then(canvas => {
         const imgData = canvas.toDataURL("image/png");
-        pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pageHeight);
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+
+        let heightLeft = pdfHeight;
+        let position = 0;
+
+        while (heightLeft > 0) {
+            pdf.addImage(imgData, "PNG", 0, position, pageWidth, pdfHeight);
+            heightLeft -= pageHeight;
+            position = heightLeft > 0 ? -(pdfHeight - heightLeft) : 0;
+            if (heightLeft > 0) pdf.addPage();
+        }
+
         pdf.save((bioData.name || "application") + "_application.pdf");
         container.remove();
     });
