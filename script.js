@@ -103,98 +103,6 @@ const longQuestionKeys = {
   selfCompliments: "Give yourself at least 3 compliments (what are you most proud of about yourself?)"
 };
 
-// ---------------- Download Text File ----------------
-/*function downloadPdfFile(bioData, questionnaireData) {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 15;
-
-    const bgImg = new Image();
-    bgImg.src = "boat.jpg"; // your background image
-
-    bgImg.onload = () => {
-
-        function addPageWithBox(title, content) {
-            pdf.addPage();
-            pdf.addImage(bgImg, "JPEG", 0, 0, pageWidth, pageHeight);
-
-            const boxMaxWidth = pageWidth - margin * 2;
-            const startX = margin;
-            const startY = margin;
-
-            const padding = 10; // add some space inside the box
-
-            // Split title and content with padding
-            pdf.setFont("helvetica", "bold");
-            pdf.setFontSize(16);
-            const titleLines = pdf.splitTextToSize(title, boxMaxWidth - padding * 2);
-
-            pdf.setFont("helvetica", "normal");
-            pdf.setFontSize(12);
-            const contentLines = pdf.splitTextToSize(content, boxMaxWidth - padding * 2);
-
-            const lineHeight = 6;
-
-            // Dynamic box height based on content
-            const boxHeight =
-                titleLines.length * lineHeight + contentLines.length * lineHeight + 20;
-
-            // Draw box at top
-            pdf.setFillColor(255, 255, 255); // **white background**
-            pdf.setDrawColor(200, 200, 200); // light gray border
-            pdf.setLineWidth(0.5);
-            pdf.roundedRect(startX, startY, boxMaxWidth, boxHeight, 8, 8, "FD");
-
-            // Draw title
-            pdf.text(titleLines, startX + padding, startY + padding);
-
-            // Draw content
-            pdf.setFont("helvetica", "normal");
-            let yOffset = startY + padding + titleLines.length * lineHeight + 5;
-
-            content.split("\n").forEach(line => {
-                const lines = pdf.splitTextToSize(line, boxMaxWidth - padding * 2); // subtract left/right padding
-                pdf.text(lines, startX + padding, yOffset);
-                yOffset += lines.length * lineHeight;
-            });
-        }
-
-        // --- Page 1: Biography ---
-        const bioLines = [
-            `Name: ${bioData.name}`,
-            `Age: ${bioData.age}`,
-            `Gender: ${bioData.gender}`,
-            `Height: ${bioData.height}`,
-            `Hobbies: ${bioData.hobbies}`
-        ];
-
-        // Create a single string for the box, but split text to size properly
-        const bioContent = bioLines.join("\n");
-        addPageWithBox("Biography", bioContent);
-
-        // --- Page 2: Closed Questions ---
-        let closedContent = "";
-        for (let key in questionnaireData) {
-            if (yesnoKeys[key]) {
-                closedContent += `${yesnoKeys[key]}: ${questionnaireData[key]}\n\n`;
-            }
-        }
-        addPageWithBox("", closedContent.trim());
-
-        // --- Long Questions ---
-        for (let key in longQuestionKeys) {
-            if (questionnaireData[key]) {
-                addPageWithBox(longQuestionKeys[key], questionnaireData[key]);
-            }
-        }
-
-        pdf.deletePage(1); // remove empty first page
-        pdf.save((bioData.name || "application") + "_application.pdf");
-    };
-}*/
-
 function downloadPdfFile(bioData, questionnaireData) {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF("p", "mm", "a4");
@@ -217,28 +125,22 @@ function downloadPdfFile(bioData, questionnaireData) {
     container.style.backgroundSize = "100% 100%";
     container.style.backgroundPosition = "center";
     container.style.backgroundRepeat = "no-repeat";
-    container.style.color = "#fff";
+    container.style.color = "#fff"; // white text
 
+    // Numbered questions for Closed and Long Questions
     let questionNumber = 1;
 
-    // Closed questions HTML
     const closedQuestionsHtml = Object.keys(questionnaireData)
         .filter(k => yesnoKeys[k])
         .map(k => `<p><strong>Question ${questionNumber++}:</strong> ${yesnoKeys[k]}<br><em>Answer:</em> ${questionnaireData[k]}</p>`)
         .join("");
 
-    // Long questions HTML, separated visually
     const longQuestionsHtml = Object.keys(longQuestionKeys)
         .filter(k => questionnaireData[k])
-        .map(k => `
-            <div style="margin-bottom:10px; padding-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.5);">
-                <p><strong>Question ${questionNumber++}:</strong> ${longQuestionKeys[k]}</p>
-                <p><em>Answer:</em> ${questionnaireData[k]}</p>
-            </div>
-        `)
+        .map(k => `<p><strong>Question ${questionNumber++}:</strong> ${longQuestionKeys[k]}<br><em>Answer:</em> ${questionnaireData[k]}</p>`)
         .join("");
 
-    // Full HTML
+    // Build HTML with cards
     let htmlContent = `
         <div style="width:100%; height:100%; display:flex; flex-direction:column; gap:15px; padding:15px;">
             
@@ -277,7 +179,6 @@ function downloadPdfFile(bioData, questionnaireData) {
         container.remove();
     });
 }
-
 // ---------------- Welcome Form ----------------
 welcomeForm.addEventListener("submit", e => {
     e.preventDefault();
