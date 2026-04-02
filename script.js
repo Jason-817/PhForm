@@ -174,23 +174,29 @@ function downloadPdfFile(bioData, questionnaireData) {
     document.body.appendChild(container);
 
     html2canvas(container, { scale: 2 }).then(canvas => {
-        const imgData = canvas.toDataURL("image/png");
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+    const imgData = canvas.toDataURL("image/png");
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
 
-        let heightLeft = pdfHeight;
-        let position = 0;
+    let heightLeft = pdfHeight;
+    let position = 0;
 
-        while (heightLeft > 0) {
-            pdf.addImage(imgData, "PNG", 0, position, pageWidth, pdfHeight);
-            heightLeft -= pageHeight;
-            position = heightLeft > 0 ? -(pdfHeight - heightLeft) : 0;
-            if (heightLeft > 0) pdf.addPage();
-        }
+    while (heightLeft > 0) {
+        // Draw full-page background first
+        pdf.addImage("boat.jpg", "JPEG", 0, 0, pageWidth, pageHeight);
 
-        pdf.save((bioData.name || "application") + "_application.pdf");
-        container.remove();
-    });
+        // Then draw the content on top
+        pdf.addImage(imgData, "PNG", 0, position, pageWidth, pdfHeight);
+
+        heightLeft -= pageHeight;
+        position = heightLeft > 0 ? -(pdfHeight - heightLeft) : 0;
+
+        if (heightLeft > 0) pdf.addPage();
+    }
+
+    pdf.save((bioData.name || "application") + "_application.pdf");
+    container.remove();
+});
 }
 
 // ---------------- Welcome Form ----------------
