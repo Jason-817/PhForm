@@ -105,59 +105,94 @@ const longQuestionKeys = {
 
 // ---------------- Download Text File ----------------
 function downloadPdfFile(bioData, questionnaireData) {
-
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 15;
 
-    let y = 10;
+    const bgImg = new Image();
+    bgImg.src = "boat.jpg"; // your background image
 
-    function addLine(text) {
-        const lines = doc.splitTextToSize(text, 180);
-        lines.forEach(line => {
-            if (y > 280) {
-                doc.addPage();
-                y = 10;
+    bgImg.onload = () => {
+
+        function addPageWithBox(title, content) {
+            pdf.addPage();
+            pdf.addImage(bgImg, "JPEG", 0, 0, pageWidth, pageHeight);
+
+            const boxMaxWidth = pageWidth - margin * 2;
+            const startX = margin;
+            const startY = margin;
+
+            const padding = 10; // add some space inside the box
+
+            // Split title and content with padding
+            pdf.setFont("helvetica", "bold");
+            pdf.setFontSize(16);
+            const titleLines = pdf.splitTextToSize(title, boxMaxWidth - padding * 2);
+
+            pdf.setFont("helvetica", "normal");
+            pdf.setFontSize(12);
+            const contentLines = pdf.splitTextToSize(content, boxMaxWidth - padding * 2);
+
+            const lineHeight = 6;
+
+            // Dynamic box height based on content
+            const boxHeight =
+                titleLines.length * lineHeight + contentLines.length * lineHeight + 20;
+
+            // Draw box at top
+            pdf.setFillColor(255, 255, 255); // **white background**
+            pdf.setDrawColor(200, 200, 200); // light gray border
+            pdf.setLineWidth(0.5);
+            pdf.roundedRect(startX, startY, boxMaxWidth, boxHeight, 8, 8, "FD");
+
+            // Draw title
+            pdf.text(titleLines, startX + padding, startY + padding);
+
+            // Draw content
+            pdf.setFont("helvetica", "normal");
+            let yOffset = startY + padding + titleLines.length * lineHeight + 5;
+
+            content.split("\n").forEach(line => {
+                const lines = pdf.splitTextToSize(line, boxMaxWidth - padding * 2); // subtract left/right padding
+                pdf.text(lines, startX + padding, yOffset);
+                yOffset += lines.length * lineHeight;
+            });
+        }
+
+        // --- Page 1: Biography ---
+        const bioLines = [
+            `Name: ${bioData.name}`,
+            `Age: ${bioData.age}`,
+            `Gender: ${bioData.gender}`,
+            `Height: ${bioData.height}`,
+            `Hobbies: ${bioData.hobbies}`
+        ];
+
+        // Create a single string for the box, but split text to size properly
+        const bioContent = bioLines.join("\n");
+        addPageWithBox("Biography", bioContent);
+
+        // --- Page 2: Closed Questions ---
+        let closedContent = "";
+        for (let key in questionnaireData) {
+            if (yesnoKeys[key]) {
+                closedContent += `${yesnoKeys[key]}: ${questionnaireData[key]}\n\n`;
             }
-            doc.text(line, 10, y);
-            y += 7;
-        });
-    }
-
-    addLine("===== Getting to Know You APPLICATION =====");
-    y += 5;
-
-    addLine("----- BIOGRAPHY -----");
-
-    const bioOrder = ["name","age","gender","height","distinguishingFeatures","hobbies"];
-    bioOrder.forEach(key => {
-        if (bioData[key]) {
-            addLine(`${key}: ${bioData[key]}`);
         }
-    });
+        addPageWithBox("", closedContent.trim());
 
-    y += 5;
-    addLine("----- YES / NO QUESTIONS -----");
-
-    for (let key in questionnaireData) {
-        if (yesnoKeys[key]) {
-            addLine(yesnoKeys[key]);
-            addLine("Answer: " + questionnaireData[key]);
-            y += 3;
+        // --- Long Questions ---
+        for (let key in longQuestionKeys) {
+            if (questionnaireData[key]) {
+                addPageWithBox(longQuestionKeys[key], questionnaireData[key]);
+            }
         }
-    }
 
-    y += 5;
-    addLine("----- LONG QUESTIONS -----");
-
-    for (let key in questionnaireData) {
-        if (longQuestionKeys[key]) {
-            addLine(longQuestionKeys[key]);
-            addLine("Answer: " + questionnaireData[key]);
-            y += 3;
-        }
-    }
-
-    doc.save("application.pdf");
+        pdf.deletePage(1); // remove empty first page
+        pdf.save((bioData.name || "application") + "_application.pdf");
+    };
 }
 
 // ---------------- Welcome Form ----------------
@@ -273,7 +308,9 @@ gfForm.addEventListener("submit", e => {
 
     downloadPdfFile(window.bioData || {}, window.questionnaireData);
 
-    questionnaireScreen.style.display = "none";
+    setTimeout(()=>{
+        questionnaireScreen.style.display = "none";
+    },500);
     //plinkoSection.style.display = "flex"; remove comment to reapply the plinko section
 
     stopFloatingGIFs();
