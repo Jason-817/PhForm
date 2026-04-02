@@ -125,22 +125,28 @@ function downloadPdfFile(bioData, questionnaireData) {
     container.style.backgroundSize = "100% 100%";
     container.style.backgroundPosition = "center";
     container.style.backgroundRepeat = "no-repeat";
-    container.style.color = "#fff"; // white text
+    container.style.color = "#fff";
 
-    // Numbered questions for Closed and Long Questions
     let questionNumber = 1;
 
+    // Closed questions HTML
     const closedQuestionsHtml = Object.keys(questionnaireData)
         .filter(k => yesnoKeys[k])
         .map(k => `<p><strong>Question ${questionNumber++}:</strong> ${yesnoKeys[k]}<br><em>Answer:</em> ${questionnaireData[k]}</p>`)
         .join("");
 
+    // Long questions HTML, separated visually
     const longQuestionsHtml = Object.keys(longQuestionKeys)
         .filter(k => questionnaireData[k])
-        .map(k => `<p><strong>Question ${questionNumber++}:</strong> ${longQuestionKeys[k]}<br><em>Answer:</em> ${questionnaireData[k]}</p>`)
+        .map(k => `
+            <div style="margin-bottom:10px; padding-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.5);">
+                <p><strong>Question ${questionNumber++}:</strong> ${longQuestionKeys[k]}</p>
+                <p><em>Answer:</em> ${questionnaireData[k]}</p>
+            </div>
+        `)
         .join("");
 
-    // Build HTML with cards
+    // Full HTML
     let htmlContent = `
         <div style="width:100%; height:100%; display:flex; flex-direction:column; gap:15px; padding:15px;">
             
@@ -179,6 +185,7 @@ function downloadPdfFile(bioData, questionnaireData) {
         container.remove();
     });
 }
+
 // ---------------- Welcome Form ----------------
 welcomeForm.addEventListener("submit", e => {
     e.preventDefault();
