@@ -217,49 +217,63 @@ function downloadPdfFile(bioData, questionnaireData) {
     container.style.backgroundSize = "100% 100%";
     container.style.backgroundPosition = "center";
     container.style.backgroundRepeat = "no-repeat";
-    container.style.color = "#fff"; // make all text white
+    container.style.color = "#fff";
 
-    // Add a semi-transparent overlay behind text for better readability
+    let questionNumber = 1;
+
+    // Closed questions HTML
+    const closedQuestionsHtml = Object.keys(questionnaireData)
+        .filter(k => yesnoKeys[k])
+        .map(k => `<p><strong>Question ${questionNumber++}:</strong> ${yesnoKeys[k]}<br><em>Answer:</em> ${questionnaireData[k]}</p>`)
+        .join("");
+
+    // Long questions HTML, separated visually
+    const longQuestionsHtml = Object.keys(longQuestionKeys)
+        .filter(k => questionnaireData[k])
+        .map(k => `
+            <div style="margin-bottom:10px; padding-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.5);">
+                <p><strong>Question ${questionNumber++}:</strong> ${longQuestionKeys[k]}</p>
+                <p><em>Answer:</em> ${questionnaireData[k]}</p>
+            </div>
+        `)
+        .join("");
+
+    // Full HTML
     let htmlContent = `
-        <div style="
-            width:100%; 
-            height:100%; 
-            display:flex; 
-            flex-direction:column; 
-            justify-content:flex-start; 
-            background: rgba(0,0,0,0.4); /* dark overlay */
-            padding: 15px;
-            border-radius: 10px;
-        ">
-            <h2>Biography</h2>
-            <p><strong>Name:</strong> ${bioData.name}</p>
-            <p><strong>Age:</strong> ${bioData.age}</p>
-            <p><strong>Gender:</strong> ${bioData.gender}</p>
-            <p><strong>Height:</strong> ${bioData.height}</p>
-            <p><strong>Hobbies:</strong> ${bioData.hobbies}</p>
-            <hr>
-            <h2>Closed Questions</h2>
-            ${Object.keys(questionnaireData)
-              .filter(k => yesnoKeys[k])
-              .map(k => `<p><strong>${yesnoKeys[k]}:</strong> ${questionnaireData[k]}</p>`)
-              .join("")}
-            <hr>
-            <h2>Long Questions</h2>
-            ${Object.keys(longQuestionKeys)
-              .filter(k => questionnaireData[k])
-              .map(k => `<p><strong>${longQuestionKeys[k]}:</strong> ${questionnaireData[k]}</p>`)
-              .join("")}
+        <div style="width:100%; height:100%; display:flex; flex-direction:column; gap:15px; padding:15px;">
+            
+            <!-- Biography Card -->
+            <div style="background: rgba(0,0,0,0.5); padding:15px; border-radius:10px;">
+                <h2>Biography</h2>
+                <p><strong>Name:</strong> ${bioData.name}</p>
+                <p><strong>Age:</strong> ${bioData.age}</p>
+                <p><strong>Gender:</strong> ${bioData.gender}</p>
+                <p><strong>Height:</strong> ${bioData.height}</p>
+                <p><strong>Hobbies:</strong> ${bioData.hobbies}</p>
+            </div>
+
+            <!-- Closed Questions Card -->
+            <div style="background: rgba(0,0,0,0.5); padding:15px; border-radius:10px;">
+                <h2>Closed Questions</h2>
+                ${closedQuestionsHtml}
+            </div>
+
+            <!-- Long Questions Card -->
+            <div style="background: rgba(0,0,0,0.5); padding:15px; border-radius:10px;">
+                <h2>Long Questions</h2>
+                ${longQuestionsHtml}
+            </div>
+
         </div>
     `;
+
     container.innerHTML = htmlContent;
     document.body.appendChild(container);
 
     html2canvas(container, { scale: 2 }).then(canvas => {
         const imgData = canvas.toDataURL("image/png");
-
         pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pageHeight);
         pdf.save((bioData.name || "application") + "_application.pdf");
-
         container.remove();
     });
 }
